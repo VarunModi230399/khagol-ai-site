@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber'
 import { Ring, useTexture } from '@react-three/drei'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import type { Group, Mesh } from 'three'
 import { PLANETS } from '../../config/planets'
 import { OrbitingPlanet } from './OrbitingPlanet'
@@ -24,7 +24,10 @@ export function KhagolPlanet({
   const meshRef = useRef<Mesh | null>(null)
   const shellRef = useRef<Mesh | null>(null)
   const ringClusterRef = useRef<Group | null>(null)
+  const haloRef = useRef<Mesh | null>(null)
+  const pressStartRef = useRef<{ x: number; y: number } | null>(null)
   const logoMap = useTexture('/logo.png')
+  const [isHovered, setIsHovered] = useState(false)
 
   useFrame((state, delta) => {
     if (meshRef.current) meshRef.current.rotation.y += delta * 0.22
@@ -45,7 +48,11 @@ export function KhagolPlanet({
 
     if (meshRef.current) {
       meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.4) * 0.05 + progress * 0.15
-      meshRef.current.scale.setScalar(1 + progress * 0.08)
+      meshRef.current.scale.setScalar(1 + progress * 0.08 + (isHovered ? 0.06 : 0))
+    }
+
+    if (haloRef.current) {
+      haloRef.current.scale.setScalar(1.5 + (isHovered ? 0.12 : 0))
     }
   })
 
@@ -53,8 +60,27 @@ export function KhagolPlanet({
     <group>
       <mesh
         ref={meshRef}
-        onClick={() => onMainClick && onMainClick()}
-        onPointerOver={() => onPlanetHover && onPlanetHover(null)}
+        onPointerDown={(event) => {
+          pressStartRef.current = { x: event.clientX, y: event.clientY }
+        }}
+        onPointerUp={(event) => {
+          const start = pressStartRef.current
+          pressStartRef.current = null
+          const deltaX = start ? Math.abs(event.clientX - start.x) : 0
+          const deltaY = start ? Math.abs(event.clientY - start.y) : 0
+          if (deltaX < 10 && deltaY < 10 && onMainClick) {
+            onMainClick()
+          }
+        }}
+        onPointerEnter={() => {
+          setIsHovered(true)
+          if (onPlanetHover) onPlanetHover(null)
+          document.body.style.cursor = 'pointer'
+        }}
+        onPointerLeave={() => {
+          setIsHovered(false)
+          document.body.style.cursor = 'default'
+        }}
       >
         <sphereGeometry args={[1.26, 128, 128]} />
         <meshStandardMaterial
@@ -62,7 +88,7 @@ export function KhagolPlanet({
           metalness={0.24}
           roughness={0.28}
           emissive="#60a5fa"
-          emissiveIntensity={0.5}
+          emissiveIntensity={isHovered ? 0.82 : 0.5}
           map={logoMap}
         />
       </mesh>
@@ -72,9 +98,9 @@ export function KhagolPlanet({
         <meshBasicMaterial color="#7dd3fc" transparent opacity={0.2} />
       </mesh>
 
-      <mesh scale={[1.5, 1.5, 1.5]}>
+      <mesh ref={haloRef} scale={[1.5, 1.5, 1.5]}>
         <sphereGeometry args={[1.2, 42, 42]} />
-        <meshBasicMaterial color="#22d3ee" transparent opacity={0.06} />
+        <meshBasicMaterial color="#22d3ee" transparent opacity={isHovered ? 0.11 : 0.06} />
       </mesh>
 
       <group ref={ringClusterRef}>

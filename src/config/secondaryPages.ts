@@ -1,4 +1,32 @@
 export const SECONDARY_PAGES = {
+  core: {
+    title: 'KHAGOL Core',
+    kicker: 'Central Intelligence System',
+    intro: 'The strategic and technical center of the KHAGOL AI universe.',
+    description:
+      'This page represents the core KHAGOL AI system: the place where strategy, machine learning, data, and automation are unified into one execution model. It serves as the central product narrative for the main planet in the hero experience.',
+    sections: [
+      {
+        title: 'What The Core Represents',
+        items: [
+          'A unified operating model for AI strategy, data foundations, ML systems, and automation.',
+          'A central decision layer designed to keep technical systems aligned with real business objectives.',
+          'A premium systems-thinking approach where every orbiting service connects back to one coherent platform vision.'
+        ]
+      },
+      {
+        title: 'Core Capabilities',
+        items: [
+          'Strategic planning and architecture alignment',
+          'Integrated intelligence workflows across teams and tools',
+          'Execution governance for real production delivery'
+        ]
+      }
+    ],
+    ctaTitle: 'Enter The KHAGOL Core',
+    ctaBody:
+      'Use this page as the dedicated destination for the central planet and the main platform story behind the KHAGOL AI universe.'
+  },
   projects: {
     title: 'Projects',
     kicker: 'Archive Nebula',

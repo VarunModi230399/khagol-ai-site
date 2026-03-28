@@ -70,6 +70,7 @@ export function OrbitingPlanet({
   const planetRef = useRef<Mesh | null>(null)
   const auraRef = useRef<Mesh | null>(null)
   const orbitAccentRef = useRef<Group | null>(null)
+  const pressStartRef = useRef<{ x: number; y: number } | null>(null)
   const [hovered, setHovered] = useState(false)
 
   const style = useMemo(() => PERSONALITY[planet.section], [planet.section])
@@ -148,9 +149,20 @@ export function OrbitingPlanet({
   return (
     <group
       ref={groupRef}
+      onPointerDown={(event) => {
+        pressStartRef.current = { x: event.clientX, y: event.clientY }
+      }}
+      onPointerUp={(event) => {
+        const start = pressStartRef.current
+        pressStartRef.current = null
+        const deltaX = start ? Math.abs(event.clientX - start.x) : 0
+        const deltaY = start ? Math.abs(event.clientY - start.y) : 0
+        if (deltaX < 10 && deltaY < 10 && onClick) {
+          onClick(planet.section)
+        }
+      }}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
-      onClick={() => onClick && onClick(planet.section)}
     >
       <mesh ref={planetRef}>
         <sphereGeometry args={[style.size, 64, 64]} />
