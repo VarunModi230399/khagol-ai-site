@@ -16,7 +16,7 @@ import type { ServiceSectionKey } from '../../types/planet'
 interface SolarSystemCanvasProps {
   progress?: number
   variant?: 'interactive' | 'ambient'
-  theme?: 'home' | ServiceSectionKey | 'projects' | 'contact'
+  theme?: 'home' | ServiceSectionKey | 'core' | 'projects' | 'contact'
   onMainClick?(): void
   onPlanetClick?(section: ServiceSectionKey): void
   onPlanetHover?(section: ServiceSectionKey | null): void
@@ -24,6 +24,7 @@ interface SolarSystemCanvasProps {
 
 const SCENE_THEMES = {
   home: { core: '#67e8f9', fill: '#60a5fa', accent: '#a78bfa' },
+  core: { core: '#67e8f9', fill: '#fbbf24', accent: '#c084fc' },
   strategy: { core: '#8dd8ff', fill: '#67e8f9', accent: '#fbbf24' },
   ml: { core: '#60a5fa', fill: '#93c5fd', accent: '#c084fc' },
   data: { core: '#c4b5fd', fill: '#a78bfa', accent: '#67e8f9' },
@@ -257,6 +258,46 @@ function EnergyBands({
         <torusGeometry args={[3.2, 0.08, 12, 180]} />
         <meshBasicMaterial color="#e0f2fe" transparent opacity={0} />
       </mesh>
+    </group>
+  )
+}
+
+function GalaxySpiral({
+  progress,
+  reducedMotion
+}: {
+  progress: number
+  reducedMotion: boolean
+}) {
+  const groupRef = useRef<Group | null>(null)
+  const reveal = range(progress, 0.16, 0.42)
+
+  useFrame((_, delta) => {
+    if (!groupRef.current) return
+    groupRef.current.rotation.z += delta * (reducedMotion ? 0.02 : 0.05)
+    groupRef.current.rotation.x = 0.9 + reveal * 0.18
+    groupRef.current.position.set(3.1, 1.6, -4.8)
+    groupRef.current.scale.setScalar(0.84 + reveal * 0.34)
+  })
+
+  return (
+    <group ref={groupRef} visible={reveal > 0.01}>
+      <mesh>
+        <torusGeometry args={[1.5, 0.06, 12, 180]} />
+        <meshBasicMaterial color="#dbeafe" transparent opacity={0.08 + reveal * 0.12} />
+      </mesh>
+      <mesh rotation={[0, 0, Math.PI / 3]}>
+        <torusGeometry args={[1.05, 0.04, 12, 160]} />
+        <meshBasicMaterial color="#93c5fd" transparent opacity={0.1 + reveal * 0.14} />
+      </mesh>
+      <Sparkles
+        count={reducedMotion ? 10 : 22}
+        size={2.1}
+        scale={[2.8, 1.1, 2.8]}
+        position={[0, 0, 0]}
+        speed={0.22}
+        color="#e0f2fe"
+      />
     </group>
   )
 }
@@ -508,6 +549,7 @@ export function SolarSystemCanvas({
 
         <NebulaShells progress={progress} reducedMotion={reducedMotion} />
         <EnergyBands progress={progress} reducedMotion={reducedMotion} />
+        <GalaxySpiral progress={progress} reducedMotion={reducedMotion} />
         <ForegroundDrift progress={progress} />
 
         <Stars

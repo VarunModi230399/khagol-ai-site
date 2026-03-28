@@ -1,399 +1,407 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import type { ServiceSectionKey } from '../../types/planet'
 import {
   CAPABILITY_CARDS,
-  FAQ_ITEMS,
   OWNER_NAME,
   PROCESS_STEPS,
   PROJECT_HIGHLIGHTS,
   SERVICES_OVERVIEW,
-  TESTIMONIALS,
   WHY_KHAGOL
 } from '../../config/siteContent'
 
-interface HomeContentSectionsProps {
-  onOpenService(section: ServiceSectionKey): void
-}
-
-function SectionShell({
+function SceneSection({
   id,
-  eyebrow,
+  kicker,
   title,
-  accent,
+  panel,
+  align = 'left',
   children
 }: {
-  id?: string
-  eyebrow: string
+  id: string
+  kicker: string
   title: string
-  accent: string
+  panel: 'pearl' | 'aurora' | 'lavender' | 'signal'
+  align?: 'left' | 'right'
   children: ReactNode
 }) {
   return (
-    <section id={id} style={sectionShellStyle}>
+    <section
+      id={id}
+      style={{
+        ...sceneSectionStyle,
+        justifyContent: align === 'left' ? 'flex-start' : 'flex-end'
+      }}
+    >
       <div
         style={{
-          ...sectionPanelStyle,
-          borderColor: `${accent}26`,
-          boxShadow: `0 28px 80px rgba(2,6,23,0.42), inset 0 0 60px ${accent}12`
+          ...scenePanelStyle,
+          ...panelThemes[panel]
         }}
       >
-        <p style={{ ...eyebrowStyle, color: accent }}>{eyebrow}</p>
-        <h2 style={titleStyle}>{title}</h2>
+        <p style={{ ...sceneKickerStyle, color: panelThemes[panel].accentColor }}>{kicker}</p>
+        <h2 style={sceneTitleStyle}>{title}</h2>
         {children}
       </div>
     </section>
   )
 }
 
-export function HomeContentSections({ onOpenService }: HomeContentSectionsProps) {
+export function HomeContentSections() {
   return (
     <main
       style={{
         position: 'relative',
         zIndex: 8,
-        background:
-          'linear-gradient(180deg, rgba(2,6,23,0.02) 0%, rgba(2,6,23,0.96) 10%, #020617 100%)',
-        borderTop: '1px solid rgba(148,163,184,0.15)',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        paddingBottom: 44
       }}
     >
-      <SectionShell
+      <SceneSection
         id="about-section"
-        eyebrow="Studio"
-        title="About KHAGOL AI"
-        accent="#8dd8ff"
+        kicker="About"
+        title="A focused AI partner for real delivery"
+        panel="pearl"
+        align="right"
       >
         <p style={bodyStyle}>
-          KHAGOL AI is a premium AI studio focused on turning strategic ambition into
-          production systems. We combine executive-level clarity with technical depth to
-          design solutions that perform in real operating environments.
+          KHAGOL AI turns strategy, machine learning, data, and automation into a connected
+          intelligence field. The platform is designed so every orbiting capability remains
+          part of one coherent operating universe.
         </p>
-        <p style={{ ...bodyStyle, marginTop: 12 }}>
-          Founder: {OWNER_NAME}
-        </p>
-      </SectionShell>
+        <div style={inlineGridStyle}>
+          {WHY_KHAGOL.slice(0, 2).map((item) => (
+            <article key={item} style={microCardStyle}>
+              <p style={microCardBodyStyle}>{item}</p>
+            </article>
+          ))}
+        </div>
+      </SceneSection>
 
-      <SectionShell
+      <SceneSection
         id="services-section"
-        eyebrow="Service Worlds"
-        title="Services Overview"
-        accent="#67e8f9"
+        kicker="Services"
+        title="Four service areas, one execution model"
+        panel="aurora"
+        align="left"
       >
-        <div style={gridStyle}>
+        <p style={bodyStyle}>
+          The service worlds stay visible while the content shifts around them. Each service
+          keeps its own identity, but all four converge on the same execution engine.
+        </p>
+        <div style={serviceOrbitGridStyle}>
           {SERVICES_OVERVIEW.map((service) => (
-            <article
+            <Link
               key={service.key}
+              to={service.href}
               style={{
-                ...cardStyle,
-                border: `1px solid ${service.accent}55`,
-                boxShadow: `inset 0 0 40px ${service.accent}18`
+                ...serviceOrbitCardStyle,
+                borderColor: `${service.accent}55`,
+                boxShadow: `0 18px 36px rgba(15,23,42,0.14), inset 0 0 28px ${service.accent}20`
               }}
             >
-              <h3 style={cardTitleStyle}>{service.title}</h3>
-              <p style={cardBodyStyle}>{service.summary}</p>
-              <Link
-                style={cardButtonStyle}
-                to={service.href}
-                onClick={() => onOpenService(service.key)}
-              >
-                Open {service.title} →
-              </Link>
-            </article>
+              <p style={{ ...sceneKickerStyle, color: service.accent, marginBottom: 8 }}>
+                {service.title}
+              </p>
+              <p style={serviceOrbitBodyStyle}>{service.summary}</p>
+              <span style={orbitLinkStyle}>Open service →</span>
+            </Link>
           ))}
         </div>
-      </SectionShell>
+      </SceneSection>
 
-      <SectionShell
-        id="process-section"
-        eyebrow="Method"
-        title="How We Work"
-        accent="#f59e0b"
-      >
-        <div style={gridStyle}>
-          {PROCESS_STEPS.map((step, index) => (
-            <article key={step.title} style={cardStyle}>
-              <p style={stepNumberStyle}>0{index + 1}</p>
-              <h3 style={cardTitleStyle}>{step.title}</h3>
-              <p style={cardBodyStyle}>{step.description}</p>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell
+      <SceneSection
         id="capabilities-section"
-        eyebrow="Capability"
-        title="Featured Solutions"
-        accent="#c084fc"
-      >
-        <div style={gridStyle}>
-          {CAPABILITY_CARDS.map((capability) => (
-            <article key={capability.title} style={cardStyle}>
-              <h3 style={cardTitleStyle}>{capability.title}</h3>
-              <p style={cardBodyStyle}>{capability.description}</p>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell id="why-section" eyebrow="Value" title="Why Choose Us" accent="#7dd3fc">
-        <div style={gridStyle}>
-          {WHY_KHAGOL.map((item) => (
-            <article key={item} style={cardStyle}>
-              <p style={cardBodyStyle}>{item}</p>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell
-        id="founder-section"
-        eyebrow="Leadership"
-        title="Founder"
-        accent="#fbbf24"
-      >
-        <article style={{ ...cardStyle, maxWidth: 720 }}>
-          <h3 style={cardTitleStyle}>{OWNER_NAME}</h3>
-          <p style={cardBodyStyle}>
-            Founder and principal consultant guiding strategy, delivery quality, and
-            execution outcomes across KHAGOL AI engagements.
-          </p>
-        </article>
-      </SectionShell>
-
-      <SectionShell
-        id="projects-section"
-        eyebrow="Projects"
-        title="Archive Nebula"
-        accent="#f472b6"
-      >
-        <div style={gridStyle}>
-          {PROJECT_HIGHLIGHTS.map((item) => (
-            <article key={item.title} style={cardStyle}>
-              <h3 style={cardTitleStyle}>{item.title}</h3>
-              <p style={cardBodyStyle}>{item.description}</p>
-              <Link style={cardButtonStyle} to="/projects">
-                Open Projects →
-              </Link>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell
-        id="testimonials-section"
-        eyebrow="Social Proof"
-        title="What Clients Say"
-        accent="#93c5fd"
-      >
-        <div style={gridStyle}>
-          {TESTIMONIALS.map((item) => (
-            <article key={item.person} style={cardStyle}>
-              <p style={cardBodyStyle}>“{item.quote}”</p>
-              <p style={quoteAuthorStyle}>{item.person}</p>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell
-        id="faq-section"
-        eyebrow="FAQ"
-        title="Frequently Asked Questions"
-        accent="#a7f3d0"
-      >
-        <div style={{ display: 'grid', gap: 12 }}>
-          {FAQ_ITEMS.map((item) => (
-            <details key={item.question} style={faqItemStyle}>
-              <summary style={faqQuestionStyle}>{item.question}</summary>
-              <p style={faqAnswerStyle}>{item.answer}</p>
-            </details>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell
-        id="contact-section"
-        eyebrow="Contact"
-        title="Let’s Build Your Next Intelligence System"
-        accent="#67e8f9"
+        kicker="Capabilities"
+        title="How we plan, build, and improve systems"
+        panel="lavender"
+        align="right"
       >
         <p style={bodyStyle}>
-          Consultation CTA placeholder: share your scope, priorities, and timeline to start
-          a focused strategy conversation.
+          Behind the visual system is a practical delivery model: clear process, strong
+          platform foundations, and execution patterns designed for real business
+          environments.
         </p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 20 }}>
-          <Link to="/contact" style={ctaLinkStyle}>
-            Contact Page
-          </Link>
-          <a href="mailto:hello@khagol.ai" style={ctaLinkStyle}>
-            hello@khagol.ai
-          </a>
-          <a href="#" style={ctaLinkStyle}>
-            LinkedIn Placeholder
-          </a>
+        <div style={splitColumnStyle}>
+          <div style={stackStyle}>
+            {PROCESS_STEPS.slice(0, 3).map((step, index) => (
+              <article key={step.title} style={stackCardStyle}>
+                <p style={stackIndexStyle}>0{index + 1}</p>
+                <h3 style={stackTitleStyle}>{step.title}</h3>
+                <p style={stackBodyStyle}>{step.description}</p>
+              </article>
+            ))}
+          </div>
+          <div style={stackStyle}>
+            {CAPABILITY_CARDS.slice(0, 3).map((item) => (
+              <article key={item.title} style={stackCardStyle}>
+                <h3 style={stackTitleStyle}>{item.title}</h3>
+                <p style={stackBodyStyle}>{item.description}</p>
+              </article>
+            ))}
+          </div>
         </div>
-      </SectionShell>
+      </SceneSection>
 
-      <footer style={footerStyle}>
-        <div style={footerLinksStyle}>
-          <a href="#hero-top" style={footerLinkStyle}>
-            Home
-          </a>
-          <a href="#services-section" style={footerLinkStyle}>
-            Services
-          </a>
-          <a href="#projects-section" style={footerLinkStyle}>
-            Projects
-          </a>
-          <a href="#about-section" style={footerLinkStyle}>
-            About
-          </a>
-          <Link to="/contact" style={footerLinkStyle}>
-            Contact
-          </Link>
-          <a href="#" style={footerLinkStyle}>
-            Privacy
-          </a>
-          <a href="#" style={footerLinkStyle}>
-            Terms
-          </a>
-          <a href="#" style={footerLinkStyle}>
-            LinkedIn
-          </a>
-          <a href="mailto:hello@khagol.ai" style={footerLinkStyle}>
-            hello@khagol.ai
-          </a>
+      <SceneSection
+        id="projects-section"
+        kicker="Projects"
+        title="Examples, proof points, and future case studies"
+        panel="signal"
+        align="left"
+      >
+        <p style={bodyStyle}>
+          This section is ready for selected work, flagship launches, and delivery stories.
+          The presentation stays clear and structured while the background keeps the site
+          visually alive.
+        </p>
+        <div style={inlineGridStyle}>
+          {PROJECT_HIGHLIGHTS.map((item) => (
+            <article key={item.title} style={microCardStyle}>
+              <h3 style={microCardTitleStyle}>{item.title}</h3>
+              <p style={microCardBodyStyle}>{item.description}</p>
+            </article>
+          ))}
         </div>
-        <p style={footerCopyStyle}>© {new Date().getFullYear()} KHAGOL AI. All rights reserved.</p>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 18 }}>
+          <Link to="/projects" style={ctaLinkStyle}>
+            View Projects
+          </Link>
+          <Link to="/contact" style={ctaLinkStyle}>
+            Contact KHAGOL AI
+          </Link>
+        </div>
+      </SceneSection>
+
+      <section id="contact-section" style={footerSceneStyle}>
+        <div style={{ ...scenePanelStyle, ...panelThemes.signal, maxWidth: 720 }}>
+          <p style={{ ...sceneKickerStyle, color: panelThemes.signal.accentColor }}>Contact</p>
+          <h2 style={sceneTitleStyle}>Start a conversation</h2>
+          <p style={bodyStyle}>
+            Founder: {OWNER_NAME}. Use this section for strategy conversations, product
+            exploration, or system design inquiries.
+          </p>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 18 }}>
+            <a href="mailto:hello@khagol.ai" style={ctaLinkStyle}>
+              hello@khagol.ai
+            </a>
+            <Link to="/contact" style={ctaLinkStyle}>
+              Open Contact Page
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <footer style={siteFooterStyle}>
+        <div style={siteFooterInnerStyle}>
+          <div style={siteFooterBrandStyle}>
+            <p style={siteFooterTitleStyle}>KHAGOL AI</p>
+            <p style={siteFooterBodyStyle}>
+              Strategy, machine learning, data, and automation systems built with a
+              premium product mindset.
+            </p>
+          </div>
+
+          <div style={siteFooterLinksWrapStyle}>
+            <a href="#hero-top" style={siteFooterLinkStyle}>
+              Home
+            </a>
+            <a href="#about-section" style={siteFooterLinkStyle}>
+              About
+            </a>
+            <a href="#services-section" style={siteFooterLinkStyle}>
+              Services
+            </a>
+            <a href="#projects-section" style={siteFooterLinkStyle}>
+              Projects
+            </a>
+            <Link to="/contact" style={siteFooterLinkStyle}>
+              Contact
+            </Link>
+            <a href="mailto:hello@khagol.ai" style={siteFooterLinkStyle}>
+              hello@khagol.ai
+            </a>
+          </div>
+        </div>
+
+        <div style={siteFooterBottomStyle}>
+          <span style={siteFooterMetaStyle}>© {new Date().getFullYear()} KHAGOL AI</span>
+          <div style={siteFooterMetaLinksStyle}>
+            <a href="#" style={siteFooterMetaLinkStyle}>
+              Privacy
+            </a>
+            <a href="#" style={siteFooterMetaLinkStyle}>
+              Terms
+            </a>
+          </div>
+        </div>
       </footer>
     </main>
   )
 }
 
-const sectionShellStyle: CSSProperties = {
-  width: 'min(1120px, 92vw)',
+const sceneSectionStyle: CSSProperties = {
+  width: 'min(1180px, 94vw)',
+  minHeight: '96vh',
   margin: '0 auto',
-  padding: '88px 0 10px'
+  display: 'flex',
+  alignItems: 'center',
+  padding: '64px 0'
 }
 
-const sectionPanelStyle: CSSProperties = {
-  position: 'relative',
-  borderRadius: 34,
-  border: '1px solid rgba(148,163,184,0.14)',
-  background:
-    'linear-gradient(160deg, rgba(7,13,27,0.68), rgba(2,6,23,0.88)), radial-gradient(circle at top left, rgba(103,232,249,0.08), transparent 36%)',
-  boxShadow: '0 28px 80px rgba(2,6,23,0.42), inset 0 0 60px rgba(103,232,249,0.06)',
+const scenePanelStyle: CSSProperties = {
+  width: 'min(560px, 92vw)',
+  borderRadius: 30,
   padding: 'clamp(22px, 4vw, 34px)',
-  backdropFilter: 'blur(12px)',
-  WebkitBackdropFilter: 'blur(12px)'
+  border: '1px solid rgba(148, 163, 184, 0.28)',
+  backdropFilter: 'blur(22px)',
+  WebkitBackdropFilter: 'blur(22px)',
+  boxShadow: '0 26px 70px rgba(2, 6, 23, 0.28), inset 0 0 36px rgba(125, 211, 252, 0.05)'
 }
 
-const eyebrowStyle: CSSProperties = {
+const panelThemes = {
+  pearl: {
+    background:
+      'linear-gradient(160deg, rgba(9, 17, 34, 0.62), rgba(3, 7, 20, 0.72)), radial-gradient(circle at top left, rgba(96, 165, 250, 0.12), transparent 42%)',
+    accentColor: '#7dd3fc'
+  },
+  aurora: {
+    background:
+      'linear-gradient(160deg, rgba(9, 17, 34, 0.62), rgba(3, 7, 20, 0.72)), radial-gradient(circle at top left, rgba(103, 232, 249, 0.15), transparent 38%), radial-gradient(circle at bottom right, rgba(196, 181, 253, 0.12), transparent 34%)',
+    accentColor: '#60a5fa'
+  },
+  lavender: {
+    background:
+      'linear-gradient(160deg, rgba(9, 17, 34, 0.62), rgba(3, 7, 20, 0.72)), radial-gradient(circle at top left, rgba(196, 181, 253, 0.15), transparent 38%), radial-gradient(circle at bottom right, rgba(125, 211, 252, 0.1), transparent 34%)',
+    accentColor: '#a78bfa'
+  },
+  signal: {
+    background:
+      'linear-gradient(160deg, rgba(9, 17, 34, 0.62), rgba(3, 7, 20, 0.72)), radial-gradient(circle at top left, rgba(251, 191, 36, 0.1), transparent 32%), radial-gradient(circle at bottom right, rgba(103, 232, 249, 0.12), transparent 34%)',
+    accentColor: '#f59e0b'
+  }
+} as const
+
+const sceneKickerStyle: CSSProperties = {
   margin: 0,
-  color: '#93c5fd',
-  textTransform: 'uppercase',
+  fontSize: 12,
   letterSpacing: '0.18em',
-  fontSize: 12
+  textTransform: 'uppercase'
 }
 
-const titleStyle: CSSProperties = {
-  margin: '10px 0 22px',
+const sceneTitleStyle: CSSProperties = {
+  margin: '10px 0 18px',
   color: '#f8fafc',
-  fontSize: 'clamp(30px, 5vw, 48px)',
-  fontWeight: 500,
-  letterSpacing: '-0.03em'
+  fontSize: 'clamp(32px, 5vw, 54px)',
+  lineHeight: 0.98,
+  letterSpacing: '-0.04em',
+  fontWeight: 500
 }
 
 const bodyStyle: CSSProperties = {
   margin: 0,
-  maxWidth: 780,
-  fontSize: 16,
-  lineHeight: 1.8,
-  color: '#dbe6ff'
+  color: '#dbe6ff',
+  fontSize: 15,
+  lineHeight: 1.8
 }
 
-const gridStyle: CSSProperties = {
+const inlineGridStyle: CSSProperties = {
+  display: 'grid',
+  gap: 14,
+  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+  marginTop: 18
+}
+
+const microCardStyle: CSSProperties = {
+  borderRadius: 22,
+  border: '1px solid rgba(148, 163, 184, 0.24)',
+  background: 'rgba(9, 17, 34, 0.46)',
+  padding: '16px 16px 18px',
+  boxShadow: 'inset 0 0 24px rgba(125, 211, 252, 0.05)'
+}
+
+const microCardTitleStyle: CSSProperties = {
+  margin: 0,
+  color: '#f8fafc',
+  fontSize: 17,
+  fontWeight: 500
+}
+
+const microCardBodyStyle: CSSProperties = {
+  margin: 0,
+  color: '#cbd5e1',
+  fontSize: 14,
+  lineHeight: 1.7
+}
+
+const serviceOrbitGridStyle: CSSProperties = {
+  display: 'grid',
+  gap: 14,
+  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+  marginTop: 18
+}
+
+const serviceOrbitCardStyle: CSSProperties = {
+  display: 'block',
+  textDecoration: 'none',
+  borderRadius: 24,
+  border: '1px solid rgba(148, 163, 184, 0.24)',
+  background: 'rgba(9, 17, 34, 0.48)',
+  padding: '18px 18px 20px',
+  boxShadow: '0 18px 36px rgba(2, 6, 23, 0.24)'
+}
+
+const serviceOrbitBodyStyle: CSSProperties = {
+  margin: 0,
+  color: '#cbd5e1',
+  fontSize: 14,
+  lineHeight: 1.7
+}
+
+const orbitLinkStyle: CSSProperties = {
+  display: 'inline-flex',
+  marginTop: 14,
+  color: '#f8fafc',
+  fontSize: 12,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase'
+}
+
+const splitColumnStyle: CSSProperties = {
   display: 'grid',
   gap: 16,
-  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))'
+  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+  marginTop: 18
 }
 
-const cardStyle: CSSProperties = {
+const stackStyle: CSSProperties = {
+  display: 'grid',
+  gap: 12
+}
+
+const stackCardStyle: CSSProperties = {
   borderRadius: 22,
-  border: '1px solid rgba(148,163,184,0.24)',
-  background:
-    'linear-gradient(150deg, rgba(8,15,31,0.72), rgba(2,6,23,0.92)), radial-gradient(circle at top left, rgba(125,211,252,0.08), transparent 42%)',
-  boxShadow: '0 18px 40px rgba(2,6,23,0.45), inset 0 0 36px rgba(125,211,252,0.05)',
-  padding: '18px 18px 20px',
-  transform: 'translateY(0)',
-  transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease'
+  border: '1px solid rgba(148, 163, 184, 0.24)',
+  background: 'rgba(9, 17, 34, 0.48)',
+  padding: '16px 16px 18px'
 }
 
-const cardTitleStyle: CSSProperties = {
+const stackIndexStyle: CSSProperties = {
   margin: 0,
-  color: '#f1f5f9',
+  color: '#7c3aed',
+  fontSize: 12,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase'
+}
+
+const stackTitleStyle: CSSProperties = {
+  margin: '8px 0 0',
+  color: '#f8fafc',
   fontSize: 18,
   fontWeight: 500
 }
 
-const cardBodyStyle: CSSProperties = {
-  margin: '10px 0 0',
-  color: '#cbd5e1',
-  lineHeight: 1.7,
-  fontSize: 14
-}
-
-const cardButtonStyle: CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  marginTop: 16,
-  border: '1px solid rgba(148,163,184,0.45)',
-  borderRadius: 999,
-  background: 'rgba(15,23,42,0.7)',
-  color: '#e2e8f0',
-  cursor: 'pointer',
-  textDecoration: 'none',
-  fontSize: 12,
-  textTransform: 'uppercase',
-  letterSpacing: '0.12em',
-  padding: '9px 12px'
-}
-
-const stepNumberStyle: CSSProperties = {
-  margin: 0,
-  color: '#7dd3fc',
-  fontSize: 12,
-  letterSpacing: '0.12em'
-}
-
-const quoteAuthorStyle: CSSProperties = {
-  margin: '12px 0 0',
-  color: '#93c5fd',
-  fontSize: 12,
-  letterSpacing: '0.1em',
-  textTransform: 'uppercase'
-}
-
-const faqItemStyle: CSSProperties = {
-  borderRadius: 16,
-  border: '1px solid rgba(148,163,184,0.24)',
-  background:
-    'linear-gradient(150deg, rgba(8,15,31,0.72), rgba(2,6,23,0.9)), radial-gradient(circle at top left, rgba(196,181,253,0.08), transparent 42%)',
-  padding: '12px 14px'
-}
-
-const faqQuestionStyle: CSSProperties = {
-  cursor: 'pointer',
-  color: '#f8fafc',
-  listStyle: 'none',
-  fontSize: 15,
-  fontWeight: 500
-}
-
-const faqAnswerStyle: CSSProperties = {
-  margin: '10px 0 0',
+const stackBodyStyle: CSSProperties = {
+  margin: '8px 0 0',
   color: '#cbd5e1',
   fontSize: 14,
   lineHeight: 1.7
@@ -404,39 +412,97 @@ const ctaLinkStyle: CSSProperties = {
   alignItems: 'center',
   padding: '10px 14px',
   borderRadius: 999,
-  border: '1px solid rgba(148,163,184,0.45)',
+  border: '1px solid rgba(148, 163, 184, 0.36)',
   textDecoration: 'none',
-  color: '#dbeafe',
-  fontSize: 13,
-  letterSpacing: '0.08em',
+  color: '#e2e8f0',
+  background: 'rgba(9, 17, 34, 0.42)',
+  fontSize: 12,
+  letterSpacing: '0.12em',
   textTransform: 'uppercase'
 }
 
-const footerStyle: CSSProperties = {
-  width: 'min(1120px, 92vw)',
+const footerSceneStyle: CSSProperties = {
+  width: 'min(1180px, 94vw)',
+  minHeight: '70vh',
   margin: '0 auto',
-  padding: '52px 0 64px',
-  borderTop: '1px solid rgba(148,163,184,0.2)',
-  display: 'grid',
-  gap: 16
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: '48px 0 88px'
 }
 
-const footerLinksStyle: CSSProperties = {
+const siteFooterStyle: CSSProperties = {
+  width: 'min(1180px, 94vw)',
+  margin: '0 auto',
+  padding: '12px 0 56px',
+  borderTop: '1px solid rgba(148, 163, 184, 0.18)',
+  display: 'grid',
+  gap: 22
+}
+
+const siteFooterInnerStyle: CSSProperties = {
   display: 'flex',
-  gap: 14,
+  justifyContent: 'space-between',
+  gap: 24,
   flexWrap: 'wrap'
 }
 
-const footerLinkStyle: CSSProperties = {
+const siteFooterBrandStyle: CSSProperties = {
+  maxWidth: 360
+}
+
+const siteFooterTitleStyle: CSSProperties = {
+  margin: 0,
+  color: '#f8fafc',
+  fontSize: 18,
+  fontWeight: 500,
+  letterSpacing: '-0.02em'
+}
+
+const siteFooterBodyStyle: CSSProperties = {
+  margin: '8px 0 0',
   color: '#94a3b8',
+  fontSize: 14,
+  lineHeight: 1.7
+}
+
+const siteFooterLinksWrapStyle: CSSProperties = {
+  display: 'flex',
+  gap: 14,
+  flexWrap: 'wrap',
+  alignContent: 'flex-start',
+  maxWidth: 520
+}
+
+const siteFooterLinkStyle: CSSProperties = {
+  color: '#cbd5e1',
   textDecoration: 'none',
   fontSize: 12,
   textTransform: 'uppercase',
   letterSpacing: '0.1em'
 }
 
-const footerCopyStyle: CSSProperties = {
-  margin: 0,
+const siteFooterBottomStyle: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: 12,
+  flexWrap: 'wrap',
+  alignItems: 'center'
+}
+
+const siteFooterMetaStyle: CSSProperties = {
   color: '#64748b',
+  fontSize: 12
+}
+
+const siteFooterMetaLinksStyle: CSSProperties = {
+  display: 'flex',
+  gap: 14,
+  flexWrap: 'wrap'
+}
+
+const siteFooterMetaLinkStyle: CSSProperties = {
+  color: '#94a3b8',
+  textDecoration: 'none',
   fontSize: 12
 }

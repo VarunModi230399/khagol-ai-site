@@ -1,5 +1,7 @@
 import type { ServiceSectionKey } from '../types/planet'
 
+export type PlanetDestinationKey = ServiceSectionKey | 'core'
+
 // Editable placeholder for founder/owner display name.
 export const OWNER_NAME = '[Your Name]'
 
@@ -43,6 +45,58 @@ export const SERVICES_OVERVIEW: {
     href: '/services/auto'
   }
 ]
+
+export const PLANETARY_DESTINATIONS: Record<
+  PlanetDestinationKey,
+  {
+    title: string
+    summary: string
+    route: string
+    accent: string
+    tag: string
+  }
+> = {
+  core: {
+    title: 'KHAGOL Core',
+    summary:
+      'The central intelligence system linking strategy, machine learning, data, and automation into one operating model.',
+    route: '/core',
+    accent: '#fbbf24',
+    tag: 'Core System'
+  },
+  strategy: {
+    title: 'Strategy',
+    summary:
+      'Roadmaps, operating models, and decision frameworks that turn AI ambition into an executable direction.',
+    route: '/services/strategy',
+    accent: '#67e8f9',
+    tag: 'Command Layer'
+  },
+  ml: {
+    title: 'ML Systems',
+    summary:
+      'Production-grade machine learning design, deployment, monitoring, and delivery systems.',
+    route: '/services/ml',
+    accent: '#93c5fd',
+    tag: 'Model Engine'
+  },
+  data: {
+    title: 'Data Platforms',
+    summary:
+      'Modern data foundations that make analytics, AI, and operational decisions more reliable.',
+    route: '/services/data',
+    accent: '#c4b5fd',
+    tag: 'Signal Grid'
+  },
+  auto: {
+    title: 'Automation',
+    summary:
+      'Intelligent workflow orchestration that connects insights to action across tools and teams.',
+    route: '/services/auto',
+    accent: '#a7f3d0',
+    tag: 'Motion System'
+  }
+}
 
 export const PROJECT_HIGHLIGHTS = [
   {

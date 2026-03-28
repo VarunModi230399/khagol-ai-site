@@ -10,7 +10,10 @@ const clamp = (value: number, min = 0, max = 1) =>
 
 export function SecondaryPage() {
   const params = useParams<{ page: string }>()
-  const pageKey = params.page === 'projects' || params.page === 'contact' ? params.page : null
+  const pageKey =
+    params.page === 'core' || params.page === 'projects' || params.page === 'contact'
+      ? params.page
+      : null
   const content = pageKey ? SECONDARY_PAGES[pageKey] : null
   const [sceneProgress, setSceneProgress] = useState(0)
 
@@ -128,10 +131,11 @@ const fixedStageStyle: CSSProperties = {
 const heroBlockStyle: CSSProperties = {
   borderRadius: 28,
   border: '1px solid rgba(148,163,184,0.24)',
-  background: 'linear-gradient(160deg, rgba(8,15,31,0.72), rgba(2,6,23,0.82))',
-  backdropFilter: 'blur(14px)',
-  WebkitBackdropFilter: 'blur(14px)',
-  boxShadow: '0 30px 90px rgba(2,6,23,0.65)',
+  background:
+    'linear-gradient(160deg, rgba(9,17,34,0.62), rgba(3,7,20,0.76)), radial-gradient(circle at top left, rgba(103,232,249,0.08), transparent 34%), radial-gradient(circle at bottom right, rgba(244,114,182,0.07), transparent 28%)',
+  backdropFilter: 'blur(18px)',
+  WebkitBackdropFilter: 'blur(18px)',
+  boxShadow: '0 30px 90px rgba(2,6,23,0.48), inset 0 0 50px rgba(125,211,252,0.05)',
   padding: 'clamp(20px, 4vw, 38px)'
 }
 
@@ -189,7 +193,8 @@ const gridStyle: CSSProperties = {
 const cardStyle: CSSProperties = {
   borderRadius: 18,
   border: '1px solid rgba(148,163,184,0.24)',
-  background: 'rgba(15,23,42,0.56)',
+  background:
+    'linear-gradient(150deg, rgba(10,18,36,0.58), rgba(4,9,24,0.74)), radial-gradient(circle at top left, rgba(196,181,253,0.08), transparent 38%)',
   padding: '16px 16px 18px'
 }
 

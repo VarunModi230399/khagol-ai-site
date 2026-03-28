@@ -7,7 +7,7 @@ import { TopNav } from './components/ui/TopNav'
 import { HomeContentSections } from './components/ui/HomeContentSections'
 import { ServicePage } from './pages/ServicePage'
 import { SecondaryPage } from './pages/SecondaryPage'
-import { SERVICES_OVERVIEW } from './config/siteContent'
+import { PLANETARY_DESTINATIONS } from './config/siteContent'
 
 const clamp = (value: number, min = 0, max = 1) =>
   Math.min(Math.max(value, min), max)
@@ -15,6 +15,7 @@ const clamp = (value: number, min = 0, max = 1) =>
 function HomePage() {
   const [activeSection, setActiveSection] = useState<SectionKey>('home')
   const [hoveredSection, setHoveredSection] = useState<ServiceSectionKey | null>(null)
+  const [selectedPlanet, setSelectedPlanet] = useState<keyof typeof PLANETARY_DESTINATIONS | null>(null)
   const [sceneProgress, setSceneProgress] = useState(0)
   const navigate = useNavigate()
 
@@ -34,6 +35,17 @@ function HomePage() {
     }
   }, [])
 
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedPlanet(null)
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [])
+
   const scrollToId = (id: string) => {
     const target = document.getElementById(id)
     if (target) {
@@ -47,12 +59,11 @@ function HomePage() {
   }
 
   const handleMainClick = () => {
-    setActiveSection('home')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setSelectedPlanet('core')
   }
 
   const handlePlanetClick = (section: ServiceSectionKey) => {
-    openService(section)
+    setSelectedPlanet(section)
   }
 
   const handlePlanetHover = (section: ServiceSectionKey | null) => {
@@ -63,15 +74,16 @@ function HomePage() {
     setActiveSection(section)
 
     if (section === 'home') {
-      handleMainClick()
+      setSelectedPlanet(null)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
 
     openService(section)
   }
 
-  const hoveredService = SERVICES_OVERVIEW.find((item) => item.key === hoveredSection)
   const sceneTheme = hoveredSection ?? 'home'
+  const activePlanet = selectedPlanet ? PLANETARY_DESTINATIONS[selectedPlanet] : null
 
   return (
     <div style={pageStyle}>
@@ -98,13 +110,17 @@ function HomePage() {
               opacity: 1 - clamp((sceneProgress - 0.18) / 0.28)
             }}
           >
-            <p style={heroEyebrowStyle}>Persistent Intelligence Universe</p>
+            <p style={heroEyebrowStyle}>Intelligent Systems Studio</p>
             <h1 style={heroTitleStyle}>KHAGOL AI</h1>
             <p style={heroBodyStyle}>
-              A living cosmic stage for strategy, machine learning, data, and automation.
-              The universe stays present while each chapter reveals itself inside it.
+              A premium AI website built around strategy, machine learning, data, and
+              automation. Click or tap any planet to open its service card, then continue
+              through the rest of the site without losing the immersive background.
             </p>
             <div style={heroActionsStyle}>
+              <Link to="/core" style={heroLinkButtonStyle}>
+                Open KHAGOL Core
+              </Link>
               <button onClick={() => scrollToId('about-section')} style={heroButtonStyle}>
                 Explore the Universe
               </button>
@@ -114,42 +130,48 @@ function HomePage() {
             </div>
           </div>
 
-          <div style={floatingSignalStyle}>
-            <p style={signalEyebrowStyle}>Live Orbit Signal</p>
-            <p style={signalBodyStyle}>
-              {hoveredService
-                ? `${hoveredService.title}: ${hoveredService.summary}`
-                : 'The KHAGOL stage remains active as you scroll. Hover a planet to preview it, then move through the sections without leaving the universe.'}
-            </p>
-            <div style={serviceLinkRowStyle}>
-              {SERVICES_OVERVIEW.map((service) => (
-                <Link
-                  key={service.key}
-                  to={service.href}
-                  onClick={() => setActiveSection(service.key)}
-                  style={{
-                    ...serviceLinkStyle,
-                    borderColor:
-                      hoveredSection === service.key ? service.accent : 'rgba(148,163,184,0.32)',
-                    boxShadow:
-                      hoveredSection === service.key
-                        ? `0 0 18px ${service.accent}40`
-                        : 'none'
-                  }}
-                >
-                  {service.title}
-                </Link>
-              ))}
+          {activePlanet && (
+            <div style={activePlanetPanelWrapStyle} onClick={() => setSelectedPlanet(null)}>
+              <article
+                style={{
+                  ...activePlanetPanelStyle,
+                  boxShadow: `0 28px 70px rgba(15,23,42,0.34), inset 0 0 44px ${activePlanet.accent}20`
+                }}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div style={activePlanetHeaderStyle}>
+                  <div>
+                    <p style={{ ...signalEyebrowStyle, color: activePlanet.accent }}>
+                      {activePlanet.tag}
+                    </p>
+                    <h2 style={activePlanetTitleStyle}>{activePlanet.title}</h2>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPlanet(null)}
+                    style={activePlanetCloseStyle}
+                    aria-label="Close service information"
+                  >
+                    ×
+                  </button>
+                </div>
+                <p style={activePlanetBodyStyle}>{activePlanet.summary}</p>
+                <div style={activePlanetActionsStyle}>
+                  <Link to={activePlanet.route} style={activePlanetCtaStyle}>
+                    Open page →
+                  </Link>
+                </div>
+              </article>
             </div>
-          </div>
+          )}
 
           <div style={chapterRailStyle}>
             {[
-              'Core Field',
-              'Studio Layer',
-              'Service Worlds',
-              'Capability Archive',
-              'Transmission'
+              'Overview',
+              'About',
+              'Services',
+              'Capabilities',
+              'Contact'
             ].map((label, index) => {
               const markerProgress = index / 4
               const active = sceneProgress >= markerProgress - 0.08
@@ -171,7 +193,7 @@ function HomePage() {
           </div>
         </section>
 
-        <HomeContentSections onOpenService={openService} />
+        <HomeContentSections />
       </div>
     </div>
   )
@@ -283,16 +305,89 @@ const heroGhostButtonStyle: CSSProperties = {
   border: '1px solid rgba(148,163,184,0.35)'
 }
 
-const floatingSignalStyle: CSSProperties = {
-  alignSelf: 'flex-end',
-  width: 'min(360px, 88vw)',
-  borderRadius: 22,
-  border: '1px solid rgba(148,163,184,0.28)',
-  background: 'rgba(2,6,23,0.5)',
-  backdropFilter: 'blur(10px)',
-  WebkitBackdropFilter: 'blur(10px)',
-  padding: '14px 14px 16px',
-  boxShadow: '0 18px 45px rgba(2,6,23,0.5)'
+const heroLinkButtonStyle: CSSProperties = {
+  ...heroButtonStyle,
+  display: 'inline-flex',
+  alignItems: 'center',
+  textDecoration: 'none',
+  borderColor: 'rgba(251,191,36,0.45)',
+  color: '#fef3c7',
+  boxShadow: '0 0 20px rgba(251,191,36,0.12)'
+}
+
+const activePlanetPanelWrapStyle: CSSProperties = {
+  position: 'absolute',
+  inset: 0,
+  zIndex: 6,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '24px'
+}
+
+const activePlanetPanelStyle: CSSProperties = {
+  width: 'min(420px, 92vw)',
+  borderRadius: 28,
+  border: '1px solid rgba(255,255,255,0.34)',
+  background:
+    'linear-gradient(160deg, rgba(247,250,255,0.78), rgba(220,234,255,0.4)), radial-gradient(circle at top left, rgba(255,255,255,0.56), transparent 42%)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  padding: '22px 22px 24px'
+}
+
+const activePlanetHeaderStyle: CSSProperties = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+  gap: 12
+}
+
+const activePlanetTitleStyle: CSSProperties = {
+  margin: '6px 0 0',
+  color: '#0f172a',
+  fontSize: 30,
+  letterSpacing: '-0.03em',
+  fontWeight: 500
+}
+
+const activePlanetBodyStyle: CSSProperties = {
+  margin: '14px 0 0',
+  color: '#334155',
+  fontSize: 15,
+  lineHeight: 1.75
+}
+
+const activePlanetActionsStyle: CSSProperties = {
+  display: 'flex',
+  gap: 12,
+  marginTop: 18
+}
+
+const activePlanetCtaStyle: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  textDecoration: 'none',
+  borderRadius: 999,
+  border: '1px solid rgba(15,23,42,0.14)',
+  background: 'rgba(255,255,255,0.4)',
+  color: '#0f172a',
+  fontSize: 12,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  padding: '10px 14px'
+}
+
+const activePlanetCloseStyle: CSSProperties = {
+  border: 'none',
+  background: 'rgba(255,255,255,0.42)',
+  color: '#0f172a',
+  borderRadius: 999,
+  width: 34,
+  height: 34,
+  cursor: 'pointer',
+  fontSize: 20,
+  lineHeight: 1
 }
 
 const signalEyebrowStyle: CSSProperties = {
@@ -303,39 +398,11 @@ const signalEyebrowStyle: CSSProperties = {
   color: '#7dd3fc'
 }
 
-const signalBodyStyle: CSSProperties = {
-  margin: '8px 0 0',
-  fontSize: 13,
-  lineHeight: 1.65,
-  color: '#cbd5e1'
-}
-
 const chapterRailStyle: CSSProperties = {
   display: 'flex',
   gap: 16,
   flexWrap: 'wrap',
   marginTop: 10
-}
-
-const serviceLinkRowStyle: CSSProperties = {
-  display: 'flex',
-  gap: 8,
-  flexWrap: 'wrap',
-  marginTop: 14
-}
-
-const serviceLinkStyle: CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  textDecoration: 'none',
-  borderRadius: 999,
-  border: '1px solid rgba(148,163,184,0.32)',
-  background: 'rgba(15,23,42,0.78)',
-  color: '#e2e8f0',
-  fontSize: 11,
-  textTransform: 'uppercase',
-  letterSpacing: '0.12em',
-  padding: '8px 10px'
 }
 
 const chapterItemStyle: CSSProperties = {
