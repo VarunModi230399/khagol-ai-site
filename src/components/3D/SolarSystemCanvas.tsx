@@ -29,6 +29,7 @@ const SCENE_THEMES = {
   ml: { core: '#60a5fa', fill: '#93c5fd', accent: '#c084fc' },
   data: { core: '#c4b5fd', fill: '#a78bfa', accent: '#67e8f9' },
   auto: { core: '#86efac', fill: '#67e8f9', accent: '#f59e0b' },
+  agents: { core: '#fbbf24', fill: '#fde68a', accent: '#f59e0b' },  // ── AI AGENTS
   projects: { core: '#f472b6', fill: '#c084fc', accent: '#67e8f9' },
   contact: { core: '#67e8f9', fill: '#fbbf24', accent: '#c084fc' }
 } as const

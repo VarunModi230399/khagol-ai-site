@@ -9,6 +9,7 @@ interface TopNavProps {
 export function TopNav({ activeSection, onChange }: TopNavProps) {
   const links: { key: SectionKey; label: string; to: string }[] = [
     { key: 'home', label: 'Home', to: '/' },
+    { key: 'agents', label: 'Agents', to: '/services/agents' }, // ── AI AGENTS
     { key: 'strategy', label: 'Strategy', to: '/services/strategy' },
     { key: 'ml', label: 'ML', to: '/services/ml' },
     { key: 'data', label: 'Data', to: '/services/data' },
