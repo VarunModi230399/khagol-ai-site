@@ -1,5 +1,6 @@
 // src/types/planet.ts
-export type SectionKey = 'home' | 'strategy' | 'ml' | 'data' | 'auto'
+// ── AI AGENTS: added 'agents' to SectionKey for the AI Agents planet ──────────
+export type SectionKey = 'home' | 'strategy' | 'ml' | 'data' | 'auto' | 'agents'
 export type ServiceSectionKey = Exclude<SectionKey, 'home'>
 
 export interface PlanetConfig {

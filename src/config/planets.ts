@@ -49,11 +49,27 @@ export const PLANETS: PlanetConfig[] = [
     tiltY: -0.2,
     content: 'Automation & RPA',
     section: 'auto'
+  },
+  // ── AI AGENTS: 5th planet — amber/gold, outermost orbit ──────────────────────
+  {
+    id: 'agents',
+    name: 'Agents',
+    color: '#f59e0b',
+    radius: 4.4,
+    angle: Math.PI * 0.75,
+    speed: 0.11,
+    tiltX: 0.45,
+    tiltY: 0.4,
+    content: 'AI Agents & Autonomous Systems',
+    section: 'agents'
   }
 ]
 
 export const SECTIONS: Record<SectionKey, string> = {
   home: 'KHAGOL AI - Transformative AI Consultancy\n\nNavigate our solar system to explore our core services.',
+  // ── AI AGENTS ─────────────────────────────────────────────────────────────────
+  agents:
+    'AI AGENTS\n\nDeployed autonomous agents for real-world tasks\nFamily Admin Agent\nEmail Automation Agent\nMore agents launching soon',
   strategy:
     'AI STRATEGY\n\nComprehensive AI roadmap development\nBusiness transformation consulting\nTechnology assessment & selection\nROI maximization strategies',
   ml: 'MACHINE LEARNING\n\nCustom ML model development\nPredictive analytics solutions\nComputer vision & NLP\nMLOps & model deployment',
