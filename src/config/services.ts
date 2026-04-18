@@ -14,6 +14,38 @@ export interface ServicePageContent {
 }
 
 export const SERVICE_PAGE_CONTENT: Record<ServiceSectionKey, ServicePageContent> = {
+  // ── AI AGENTS: Family Admin Agent + upcoming agents (email, etc.) ─────────────
+  agents: {
+    title: 'AI Agents',
+    kicker: 'Deployed Agents',
+    intro: 'Autonomous AI agents that handle real-world tasks so your team doesn\'t have to.',
+    description:
+      'KHAGOL AI builds and deploys purpose-built autonomous agents for everyday operations — from managing family logistics to automating business email workflows. Each agent is designed for reliability, privacy, and real-world usability.',
+    offerings: [
+      'Family Admin Agent — household scheduling, reminders, and logistics coordination',
+      'Email Automation Agent — intelligent inbox triage, drafting, and follow-up (coming soon)',
+      'Custom agent development for domain-specific workflows',
+      'Multi-agent orchestration for complex, multi-step operations'
+    ],
+    useCases: [
+      'Household and family management automation',
+      'Business communication and inbox automation',
+      'Personal productivity and task delegation',
+      'Enterprise workflow agents for internal operations'
+    ],
+    process: [
+      'Workflow mapping and agent scope definition',
+      'Agent development, testing, and safety evaluation',
+      'Deployment, monitoring, and iterative improvement'
+    ],
+    benefits: [
+      'Hours saved weekly through autonomous task handling',
+      'Consistent execution quality without manual oversight',
+      'Scalable agent portfolio — start with one, expand over time'
+    ],
+    ctaTitle: 'Deploy Your First Agent',
+    ctaBody: 'Get early access to our Family Admin Agent or join the waitlist for upcoming agent launches.'
+  },
   strategy: {
     title: 'AI Strategy',
     kicker: 'Strategy Service',
