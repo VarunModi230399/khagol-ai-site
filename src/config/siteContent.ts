@@ -12,6 +12,15 @@ export const SERVICES_OVERVIEW: {
   accent: string
   href: string
 }[] = [
+  // ── AI AGENTS ─────────────────────────────────────────────────────────────────
+  {
+    key: 'agents',
+    title: 'AI Agents',
+    summary:
+      'Autonomous agents deployed for real-world tasks — from family admin to email automation and beyond.',
+    accent: '#fbbf24',
+    href: '/services/agents'
+  },
   {
     key: 'strategy',
     title: 'Strategy',
@@ -56,6 +65,15 @@ export const PLANETARY_DESTINATIONS: Record<
     tag: string
   }
 > = {
+  // ── AI AGENTS ─────────────────────────────────────────────────────────────────
+  agents: {
+    title: 'AI Agents',
+    summary:
+      'Purpose-built autonomous agents for real-world operations — Family Admin, Email Automation, and more launching soon.',
+    route: '/services/agents',
+    accent: '#fbbf24',
+    tag: 'Agent Fleet'
+  },
   core: {
     title: 'KHAGOL Core',
     summary:
