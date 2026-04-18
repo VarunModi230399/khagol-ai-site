@@ -56,6 +56,15 @@ const PERSONALITY: Record<
     size: 0.35,
     emissive: 0.46,
     ring: { radius: 0.52, tube: 0.018, tilt: [Math.PI / 2, 0.8, 0.05] }
+  },
+  // ── AI AGENTS: amber/gold glow with ring ──────────────────────────────────────
+  agents: {
+    coreColor: '#fbbf24',
+    auraColor: '#fde68a',
+    labelColor: '#fef3c7',
+    size: 0.36,
+    emissive: 0.48,
+    ring: { radius: 0.54, tube: 0.016, tilt: [Math.PI / 2.2, 0.6, 0.3] }
   }
 }
 
@@ -92,14 +101,16 @@ export function OrbitingPlanet({
       strategy: [-0.25, 0.18, -0.2],
       ml: [-0.95, 0.38, 0.62],
       data: [0.9, -0.28, -0.58],
-      auto: [0.35, -0.14, 0.22]
+      auto: [0.35, -0.14, 0.22],
+      agents: [-0.6, 0.3, 0.45]           // ── AI AGENTS
     }
 
     const constellationTargets: Record<ServiceSectionKey, [number, number, number]> = {
       strategy: [-3.2, 1.8, -1.2],
       ml: [-1.1, 0.8, -0.7],
       data: [1.2, 1.35, -0.6],
-      auto: [3.2, 0.15, -1]
+      auto: [3.2, 0.15, -1],
+      agents: [0.0, 2.2, -1.4]            // ── AI AGENTS
     }
 
     const collisionOffset = collisionOffsets[planet.section]
