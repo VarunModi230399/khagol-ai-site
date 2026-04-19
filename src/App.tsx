@@ -6,6 +6,7 @@ import { SolarSystemCanvas } from './components/3D/SolarSystemCanvas'
 import { TopNav } from './components/ui/TopNav'
 import { HomeContentSections } from './components/ui/HomeContentSections'
 import { ServicePage } from './pages/ServicePage'
+import { AgentsPage } from './pages/AgentsPage' // ── AI AGENTS
 import { SecondaryPage } from './pages/SecondaryPage'
 import { PLANETARY_DESTINATIONS } from './config/siteContent'
 
@@ -203,6 +204,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/services/agents" element={<AgentsPage />} />
       <Route path="/services/:section" element={<ServicePage />} />
       <Route path="/:page" element={<SecondaryPage />} />
     </Routes>
