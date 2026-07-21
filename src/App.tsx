@@ -235,7 +235,8 @@ const stageVignetteStyle: CSSProperties = {
 
 const contentWrapStyle: CSSProperties = {
   position: 'relative',
-  zIndex: 2
+  zIndex: 2,
+  pointerEvents: 'none'
 }
 
 const heroSectionStyle: CSSProperties = {
@@ -244,12 +245,14 @@ const heroSectionStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  gap: 28
+  gap: 28,
+  pointerEvents: 'none'
 }
 
 const heroPanelStyle: CSSProperties = {
   maxWidth: 'min(640px, 88vw)',
-  padding: 'clamp(18px, 2vw, 26px) 0'
+  padding: 'clamp(18px, 2vw, 26px) 0',
+  pointerEvents: 'auto'
 }
 
 const heroEyebrowStyle: CSSProperties = {
@@ -318,13 +321,14 @@ const heroLinkButtonStyle: CSSProperties = {
 }
 
 const activePlanetPanelWrapStyle: CSSProperties = {
-  position: 'absolute',
+  position: 'fixed',
   inset: 0,
   zIndex: 6,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: '24px'
+  padding: '24px',
+  pointerEvents: 'auto'
 }
 
 const activePlanetPanelStyle: CSSProperties = {
