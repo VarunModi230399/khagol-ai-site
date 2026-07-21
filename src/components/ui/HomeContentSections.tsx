@@ -53,7 +53,8 @@ export function HomeContentSections() {
         position: 'relative',
         zIndex: 8,
         overflow: 'hidden',
-        paddingBottom: 44
+        paddingBottom: 44,
+        pointerEvents: 'auto'
       }}
     >
       <SceneSection
